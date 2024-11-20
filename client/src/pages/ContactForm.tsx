@@ -24,9 +24,12 @@ export default function ContactForm() {
   const form = useForm<InsertContact>({
     resolver: zodResolver(insertContactSchema),
     defaultValues: {
+      subject: "",
       name: "",
       email: "",
       phone: "",
+      company: "",
+      department: "",
       message: "",
     },
   });
@@ -90,6 +93,19 @@ export default function ContactForm() {
           >
             <FormField
               control={form.control}
+              name="subject"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>件名</FormLabel>
+                  <FormControl>
+                    <Input placeholder="お問い合わせ件名" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -128,6 +144,34 @@ export default function ContactForm() {
                   <FormLabel>電話番号（任意）</FormLabel>
                   <FormControl>
                     <Input placeholder="090-1234-5678" {...formatPhoneField(field)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="company"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>会社名（任意）</FormLabel>
+                  <FormControl>
+                    <Input placeholder="株式会社〇〇" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="department"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>部署名（任意）</FormLabel>
+                  <FormControl>
+                    <Input placeholder="〇〇部" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

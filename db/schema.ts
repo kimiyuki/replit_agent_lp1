@@ -4,9 +4,12 @@ import { z } from "zod";
 
 export const contacts = pgTable("contacts", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  subject: text("subject").default("").notNull(),
   name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone").default(""),
+  company: text("company").default(""),
+  department: text("department").default(""),
   message: text("message").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

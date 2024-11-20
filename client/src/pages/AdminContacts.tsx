@@ -115,11 +115,21 @@ export default function AdminContacts() {
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-xl font-semibold">{contact.name}</h2>
-                  <p className="text-muted-foreground">{contact.email}</p>
-                  {contact.phone && (
-                    <p className="text-muted-foreground">{contact.phone}</p>
-                  )}
+                  <h2 className="text-xl font-semibold">{contact.subject || "無題"}</h2>
+                  <div className="mt-2 space-y-1">
+                    <p className="text-foreground">{contact.name}</p>
+                    <p className="text-muted-foreground">{contact.email}</p>
+                    {contact.phone && (
+                      <p className="text-muted-foreground">TEL: {contact.phone}</p>
+                    )}
+                    {(contact.company || contact.department) && (
+                      <p className="text-muted-foreground">
+                        {contact.company}
+                        {contact.company && contact.department && " / "}
+                        {contact.department}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <time className="text-sm text-muted-foreground">
                   {format(new Date(contact.createdAt), "PPP HH:mm", {

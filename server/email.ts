@@ -22,6 +22,18 @@ export async function sendConfirmationEmail({ to, name }: EmailParams) {
 お問い合わせいただき、ありがとうございます。
 以下の内容で承りました。
 
+【件名】
+${req.body.subject}
+
+【会社名】
+${req.body.company || "（未入力）"}
+
+【部署名】
+${req.body.department || "（未入力）"}
+
+【お問い合わせ内容】
+${req.body.message}
+
 担当者より順次ご連絡させていただきますので、
 今しばらくお待ちくださいませ。
 

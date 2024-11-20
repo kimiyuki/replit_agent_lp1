@@ -21,9 +21,12 @@ export async function registerRoutes(app: Express) {
     try {
       // First, save the contact data
       const contact = await db.insert(contacts).values({
+        subject: req.body.subject,
         name: req.body.name,
         email: req.body.email,
         phone: req.body.phone || "",
+        company: req.body.company || "",
+        department: req.body.department || "",
         message: req.body.message,
       }).returning();
 

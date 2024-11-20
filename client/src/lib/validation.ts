@@ -27,6 +27,10 @@ export const phoneRegex = /^(0[0-9]{1,4}-[0-9]{1,4}-[0-9]{4}|0[0-9]{9,10})$/;
 
 // Form validation schema with Japanese messages
 export const contactFormSchema = z.object({
+  subject: z
+    .string()
+    .min(1, "件名は必須です")
+    .max(100, "件名は100文字以内で入力してください"),
   name: z
     .string()
     .min(1, "名前は必須です")
@@ -38,6 +42,16 @@ export const contactFormSchema = z.object({
   phone: z
     .string()
     .regex(phoneRegex, "正しい電話番号形式で入力してください")
+    .optional()
+    .or(z.literal("")),
+  company: z
+    .string()
+    .max(100, "会社名は100文字以内で入力してください")
+    .optional()
+    .or(z.literal("")),
+  department: z
+    .string()
+    .max(100, "部署名は100文字以内で入力してください")
     .optional()
     .or(z.literal("")),
   message: z
