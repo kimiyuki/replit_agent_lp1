@@ -3,8 +3,10 @@ import { type Contact } from "@db/schema";
 import { useUser } from "../hooks/use-user";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { format, startOfDay, eachDayOfInterval, subDays } from "date-fns";
 import { ja } from "date-fns/locale";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 async function fetchContacts(): Promise<Contact[]> {
   const response = await fetch("/api/contacts", {
@@ -54,6 +56,29 @@ export default function AdminContacts() {
     );
   }
 
+  // Process data for chart
+  const chartData = React.useMemo(() => {
+    if (!contacts) return [];
+    
+    const last7Days = eachDayOfInterval({
+      start: subDays(new Date(), 6),
+      end: new Date(),
+    });
+
+    const countsByDay = last7Days.map(day => {
+      const count = contacts.filter(contact => 
+        startOfDay(new Date(contact.createdAt)).getTime() === startOfDay(day).getTime()
+      ).length;
+
+      return {
+        date: format(day, 'M/d', { locale: ja }),
+        count,
+      };
+    });
+
+    return countsByDay;
+  }, [contacts]);
+
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-6xl mx-auto">
@@ -66,6 +91,45 @@ export default function AdminContacts() {
             <Button onClick={handleLogout} variant="outline">
               ログアウト
             </Button>
+          </div>
+        </div>
+        
+        <div className="mb-8 border rounded-lg p-6 bg-card">
+          <h2 className="text-xl font-semibold mb-4">週間問い合わせ数</h2>
+          <div className="h-[300px]">
+            <ChartContainer
+              config={{
+                count: {
+                  theme: {
+                    light: "hsl(var(--primary))",
+                    dark: "hsl(var(--primary))",
+                  },
+                  label: "問い合わせ数",
+                },
+              }}
+            >
+              <BarChart data={chartData}>
+                <XAxis
+                  dataKey="date"
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                />
+                <YAxis
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  allowDecimals={false}
+                />
+                <Bar
+                  dataKey="count"
+                  fill="currentColor"
+                  className="fill-primary"
+                  radius={[4, 4, 0, 0]}
+                />
+                <ChartTooltip>
+                  <ChartTooltipContent />
+                </ChartTooltip>
+              </BarChart>
+            </ChartContainer>
           </div>
         </div>
 
