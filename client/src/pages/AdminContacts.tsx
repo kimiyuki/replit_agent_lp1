@@ -1,3 +1,4 @@
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { type Contact } from "@db/schema";
 import { useUser } from "../hooks/use-user";
@@ -125,9 +126,7 @@ export default function AdminContacts() {
                   className="fill-primary"
                   radius={[4, 4, 0, 0]}
                 />
-                <ChartTooltip>
-                  <ChartTooltipContent />
-                </ChartTooltip>
+                <ChartTooltip content={<ChartTooltipContent />} />
               </BarChart>
             </ChartContainer>
           </div>
