@@ -15,6 +15,21 @@ function log(message: string) {
 }
 
 const app = express();
+
+// Configure trust proxy and CORS for Replit
+app.set('trust proxy', 1);
+
+// Security headers
+app.use((req, res, next) => {
+  res.set({
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'X-XSS-Protection': '1; mode=block',
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
+  });
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

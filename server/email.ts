@@ -199,7 +199,7 @@ function processConditionalSections(template: string, params: Omit<EmailParams, 
   // Process if conditions
   const conditionalPattern = /{if:(\w+)}([\s\S]*?){endif:\1}/g;
   processedTemplate = processedTemplate.replace(conditionalPattern, (_, key, content) => {
-    const value = params[key as keyof EmailParams];
+    const value = params[key as keyof Omit<EmailParams, 'to'>];
     return value ? content : '';
   });
   
@@ -255,7 +255,7 @@ async function sendEmail(params: Required<Pick<EmailParams, 'to'>> & EmailParams
   }
 }
 
-export async function sendConfirmationEmail(params: EmailParams) {
+export async function sendConfirmationEmail(params: Required<Pick<EmailParams, 'to'>> & Omit<EmailParams, 'to'>) {
   await sendEmail({ ...params, type: EmailTemplateType.CONFIRMATION });
   
   // Also send admin notification if ADMIN_EMAIL is configured
