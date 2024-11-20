@@ -30,34 +30,6 @@ export default function AdminContacts() {
     queryFn: fetchContacts,
   });
 
-  const handleLogout = async () => {
-    await logout();
-    setLocation("/admin");
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background p-8">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center">読み込み中...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background p-8">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-destructive">
-            エラーが発生しました: {error.message}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Process data for chart
   const chartData = React.useMemo(() => {
     if (!contacts) return [];
     
@@ -66,7 +38,7 @@ export default function AdminContacts() {
       end: new Date(),
     });
 
-    const countsByDay = last7Days.map(day => {
+    return last7Days.map(day => {
       const count = contacts.filter(contact => 
         startOfDay(new Date(contact.createdAt)).getTime() === startOfDay(day).getTime()
       ).length;
@@ -76,9 +48,12 @@ export default function AdminContacts() {
         count,
       };
     });
-
-    return countsByDay;
   }, [contacts]);
+
+  const handleLogout = async () => {
+    await logout();
+    setLocation("/admin");
+  };
 
   return (
     <div className="min-h-screen bg-background p-8">
