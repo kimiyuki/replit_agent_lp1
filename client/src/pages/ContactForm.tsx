@@ -31,6 +31,12 @@ export default function ContactForm() {
     },
   });
 
+  // Convert null to empty string for phone field
+  const formatPhoneField = (field: { value: string | null | undefined }) => ({
+    ...field,
+    value: field.value ?? ""
+  });
+
   const mutation = useMutation({
     mutationFn: async (data: InsertContact) => {
       const response = await fetch("/api/contact", {
@@ -38,16 +44,26 @@ export default function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!response.ok) throw new Error("送信に失敗しました");
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "送信に失敗しました");
+      }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (!data.emailSent && data.warning) {
+        toast({
+          title: "送信完了（警告）",
+          description: data.warning,
+          variant: "default",
+        });
+      }
       setIsSuccess(true);
     },
-    onError: () => {
+    onError: (error: Error) => {
       toast({
         title: "エラー",
-        description: "送信に失敗しました。もう一度お試しください。",
+        description: error.message,
         variant: "destructive",
       });
     },
@@ -111,7 +127,7 @@ export default function ContactForm() {
                 <FormItem>
                   <FormLabel>電話番号（任意）</FormLabel>
                   <FormControl>
-                    <Input placeholder="090-1234-5678" {...field} />
+                    <Input placeholder="090-1234-5678" {...formatPhoneField(field)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
