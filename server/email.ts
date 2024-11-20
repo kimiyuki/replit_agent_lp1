@@ -7,7 +7,7 @@ if (!process.env.SENDGRID_API_KEY) {
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 interface EmailParams {
-  to: string;
+  to?: string;  // Make optional for template processing
   name: string;
   email?: string;
   subject: string;
@@ -193,7 +193,7 @@ function getTemplateFromEnv(type: EmailTemplateType): EmailTemplate {
   };
 }
 
-function processConditionalSections(template: string, params: EmailParams): string {
+function processConditionalSections(template: string, params: Omit<EmailParams, 'to'>): string {
   let processedTemplate = template;
   
   // Process if conditions
@@ -206,7 +206,7 @@ function processConditionalSections(template: string, params: EmailParams): stri
   return processedTemplate;
 }
 
-function processTemplateVariables(template: string, params: EmailParams): string {
+function processTemplateVariables(template: string, params: Omit<EmailParams, 'to'>): string {
   // First, replace style placeholders
   let processedTemplate = template.replace(/{styles\.(\w+)}/g, (_, key) => emailStyles[key as keyof typeof emailStyles]);
   
@@ -226,7 +226,7 @@ function processTemplateVariables(template: string, params: EmailParams): string
   );
 }
 
-async function sendEmail(params: EmailParams & { type: EmailTemplateType }) {
+async function sendEmail(params: Required<Pick<EmailParams, 'to'>> & EmailParams & { type: EmailTemplateType }) {
   const { to, type, ...templateParams } = params;
   
   try {
@@ -250,8 +250,8 @@ async function sendEmail(params: EmailParams & { type: EmailTemplateType }) {
     await sgMail.send(msg);
     console.log(`メール送信成功 (${type}): ${to}`);
   } catch (error) {
-    console.error(`メール送信エラー (${type}):`, error);
-    throw new Error('メール送信に失敗しました。お問い合わせ内容は保存されましたので、後ほど担当者よりご連絡させていただきます。');
+    console.error(`メール送信エラー (${type}): Details:`, error);
+    throw error;
   }
 }
 
