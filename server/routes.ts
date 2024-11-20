@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { db } from "../db";
 import { contacts } from "@db/schema";
 import { sendConfirmationEmail } from "./email";
@@ -6,7 +6,7 @@ import { setupAuth } from "./auth";
 import { desc } from "drizzle-orm";
 
 // Middleware to check if user is authenticated
-const requireAuth = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+const requireAuth = (req: Request, res: Response, next: () => void) => {
   if (req.isAuthenticated()) {
     return next();
   }
