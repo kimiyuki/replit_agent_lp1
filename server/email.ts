@@ -48,6 +48,21 @@ ${message}
           <h2>${name} 様</h2>
           <p>お問い合わせいただき、ありがとうございます。<br>
           以下の内容で承りました。</p>
+
+          <dl style="margin: 2em 0; padding: 1em; background: #f8f9fa; border-radius: 4px;">
+            <dt style="font-weight: bold; margin-bottom: 0.5em;">【件名】</dt>
+            <dd style="margin-left: 0; margin-bottom: 1.5em;">${subject}</dd>
+            
+            <dt style="font-weight: bold; margin-bottom: 0.5em;">【会社名】</dt>
+            <dd style="margin-left: 0; margin-bottom: 1.5em;">${company || "（未入力）"}</dd>
+            
+            <dt style="font-weight: bold; margin-bottom: 0.5em;">【部署名】</dt>
+            <dd style="margin-left: 0; margin-bottom: 1.5em;">${department || "（未入力）"}</dd>
+            
+            <dt style="font-weight: bold; margin-bottom: 0.5em;">【お問い合わせ内容】</dt>
+            <dd style="margin-left: 0; margin-bottom: 1.5em; white-space: pre-wrap;">${message}</dd>
+          </dl>
+
           <p>担当者より順次ご連絡させていただきますので、<br>
           今しばらくお待ちくださいませ。</p>
           <hr style="margin: 2em 0;">
