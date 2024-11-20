@@ -35,6 +35,10 @@ export async function registerRoutes(app: Express) {
         await sendConfirmationEmail({
           to: req.body.email,
           name: req.body.name,
+          subject: req.body.subject,
+          company: req.body.company || "",
+          department: req.body.department || "",
+          message: req.body.message,
         });
         
         res.json({ ...contact[0], emailSent: true });

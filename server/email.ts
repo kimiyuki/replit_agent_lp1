@@ -9,9 +9,13 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 interface EmailParams {
   to: string;
   name: string;
+  subject: string;
+  company: string;
+  department: string;
+  message: string;
 }
 
-export async function sendConfirmationEmail({ to, name }: EmailParams) {
+export async function sendConfirmationEmail({ to, name, subject, company, department, message }: EmailParams) {
   try {
     const msg = {
       to,
@@ -23,16 +27,16 @@ export async function sendConfirmationEmail({ to, name }: EmailParams) {
 以下の内容で承りました。
 
 【件名】
-${req.body.subject}
+${subject}
 
 【会社名】
-${req.body.company || "（未入力）"}
+${company || "（未入力）"}
 
 【部署名】
-${req.body.department || "（未入力）"}
+${department || "（未入力）"}
 
 【お問い合わせ内容】
-${req.body.message}
+${message}
 
 担当者より順次ご連絡させていただきますので、
 今しばらくお待ちくださいませ。
