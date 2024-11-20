@@ -41,7 +41,23 @@ declare global {
   }
 }
 
-export function setupAuth(app: Express) {
+export async function setupAuth(app: Express) {
+  // Create initial admin user
+  const [existingAdmin] = await db
+    .select()
+    .from(users)
+    .where(eq(users.username, 'admin'))
+    .limit(1);
+
+  if (!existingAdmin) {
+    const hashedPassword = await crypto.hash('admin123');
+    await db.insert(users).values({
+      username: 'admin',
+      password: hashedPassword,
+    });
+    console.log('Initial admin user created');
+  }
+
   const MemoryStore = createMemoryStore(session);
   const sessionSettings: session.SessionOptions = {
     secret: process.env.REPL_ID || "contact-form-secret",

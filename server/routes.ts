@@ -13,9 +13,9 @@ const requireAuth = (req: Request, res: Response, next: () => void) => {
   res.status(401).send("このページにアクセスするにはログインが必要です");
 };
 
-export function registerRoutes(app: Express) {
+export async function registerRoutes(app: Express) {
   // Set up authentication routes
-  setupAuth(app);
+  await setupAuth(app);
 
   app.post("/api/contact", async (req, res) => {
     try {
